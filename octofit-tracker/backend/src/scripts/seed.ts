@@ -1,12 +1,10 @@
-import mongoose from 'mongoose';
 import { Activity, LeaderboardEntry, Team, User, Workout } from '../models';
+import { connectToDatabase, disconnectFromDatabase } from '../database';
 
 // Seed the octofit_db database with test data
 
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
-
 const seed = async () => {
-  await mongoose.connect(mongoUri);
+  await connectToDatabase();
   console.log('Connected to MongoDB for seeding');
 
   await Promise.all([
@@ -54,7 +52,7 @@ const seed = async () => {
     workouts: workouts.length,
   });
 
-  await mongoose.disconnect();
+  await disconnectFromDatabase();
 };
 
 seed().catch((error) => {

@@ -1,10 +1,9 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import routes from './routes';
+import { connectToDatabase } from './database';
 
 const app = express();
 const port = 8000;
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
 const codespaceName = process.env.CODESPACE_NAME;
 const baseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
@@ -22,10 +21,8 @@ app.get('/api', (_req, res) => {
 
 app.use('/api', routes);
 
-mongoose
-  .connect(mongoUri)
+connectToDatabase()
   .then(() => {
-    console.log('Connected to MongoDB');
     app.listen(port, () => {
       console.log(`Backend listening on port ${port}`);
       console.log(`API base URL: ${baseUrl}`);
